@@ -11,7 +11,8 @@ apt-get install -yq \
     curl \
     gnupg \
     ufw \
-    ipset
+    ipset \
+    fail2ban
 
 # Basic safety element configuration, inspired by article https://kenhv.com/blog/securing-a-linux-server
 
@@ -92,6 +93,21 @@ cat <<'EOF' > /etc/cron.d/ipsum
 @reboot /usr/local/bin/ipsum.sh
 0 5 * * * /usr/local/bin/ipsum.sh
 EOF
+
+# Configure fail2ban
+
+cat <<'EOF' > /etc/fail2ban/jail.local
+[DEFAULT]
+bantime = 1d
+findtime = 15m
+maxretry = 3
+backend = auto
+
+[sshd]
+port = 22
+EOF
+
+systemctl restart fail2ban
 
 # Install Docker
 # This installation is based on https://docs.docker.com/engine/install/ubuntu/ documentation
