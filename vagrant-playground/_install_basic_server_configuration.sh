@@ -11,6 +11,24 @@ apt-get install -yq \
     curl \
     gnupg
 
+# Basic safety element configuration, inspired by article https://kenhv.com/blog/securing-a-linux-server
+
+usermod root --shell /sbin/nologin
+passwd --lock root
+
+cat <<EOF > /etc/ssh/sshd_config.d/99-sklein-security.conf
+Protocol 2
+MaxAuthTries 3
+PermitRootLogin no
+PasswordAuthentication no
+PubkeyAuthentication yes
+AuthenticationMethods publickey
+KbdInteractiveAuthentication no
+X11Forwarding no
+EOF
+
+systemctl restart ssh
+
 # Install Docker
 # This installation is based on https://docs.docker.com/engine/install/ubuntu/ documentation
 
