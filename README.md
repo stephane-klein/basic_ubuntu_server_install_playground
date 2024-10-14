@@ -19,3 +19,7 @@ More information, see [Projet 14 - Script de base d'installation d'un serveur Ub
 ## Getting started
 
 You can start testing deployment scripts safely locally via Vagrant and VirtualBox: [`vagrant-playground/`](./vagrant-playground/).
+
+## Resources
+
+- [Securing A Linux Server](https://kenhv.com/blog/securing-a-linux-server)
