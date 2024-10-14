@@ -8,7 +8,7 @@ This deployment “skeleton” will have to meet the following specifications:
 - Basic security:
   - Configure OpenSSH
   - Configure UFW
-  - Setup ipsum
+  - Setup [IPsum](https://github.com/stamparm/ipsum) - Daily feed of bad IPs (with blacklist hit scores)
   - Setup fail2ban
   - Setup Linux Audit
   - Setup aptcron

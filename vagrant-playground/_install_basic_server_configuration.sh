@@ -9,7 +9,9 @@ apt-get install -yq \
     apt-transport-https \
     ca-certificates \
     curl \
-    gnupg
+    gnupg \
+    ufw \
+    ipset
 
 # Basic safety element configuration, inspired by article https://kenhv.com/blog/securing-a-linux-server
 
@@ -28,6 +30,68 @@ X11Forwarding no
 EOF
 
 systemctl restart ssh
+
+ufw allow 22/tcp comment "OpenSSH"
+ufw --force enable
+
+# Configure ipsum filter, more information: https://kenhv.com/blog/securing-a-linux-server
+# https://github.com/stamparm/ipsum
+
+cat <<'EOF' > /usr/local/bin/ipsum.sh
+#!/bin/bash
+
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+exec > /dev/kmsg 2>&1
+
+TMP=/tmp/ipsum.txt
+
+until curl --head --silent --fail https://raw.githubusercontent.com/stamparm/ipsum/master/ipsum.txt > /dev/null 2>&1; do
+  echo "Waiting for GitHub to be accessible"
+  sleep 1
+done
+
+while true; do
+  until curl --compressed https://raw.githubusercontent.com/stamparm/ipsum/master/ipsum.txt > $TMP 2>/dev/null; do
+    echo "Retrying ipsum download"
+  done
+
+  if [ $(stat -c%s $TMP) -le 65536 ]; then
+    echo "WARNING: Downloaded ipsum firewall database looks wrong, retrying"
+  else
+    break
+  fi
+
+  sleep 1
+done
+
+echo "Updating firewall data"
+
+LINES=$(cat $TMP | grep -v '#' | wc -l)
+echo "Creating ipset set with $LINES matches"
+
+if ipset list | grep -q "Name: ipsum"; then
+  iptables -D INPUT -m set --match-set ipsum src -j DROP
+  ipset flush ipsum
+  ipset destroy ipsum
+fi
+ipset create ipsum hash:ip maxelem $(cat $TMP | grep -v '#' | grep -vE $(cat /etc/resolv.conf | grep '^nameserver' | awk '{print $2}' | sed -z '$ s/\n$//' | tr '\n' '|') | wc -l)
+
+cat $TMP | grep -v '#' | grep -vE $(cat /etc/resolv.conf | grep '^nameserver' | awk '{print $2}' | sed -z '$ s/\n$//' | tr '\n' '|') | cut -f 1 | sed -e 's/^/add ipsum /g' | ipset restore -!
+rm $TMP
+
+iptables -I INPUT -m set --match-set ipsum src -j DROP
+
+ipset list | grep -A6 "Name: ipsum"
+
+echo "Updated firewall data"
+EOF
+chmod 755 /usr/local/bin/ipsum.sh
+
+cat <<'EOF' > /etc/cron.d/ipsum
+@reboot /usr/local/bin/ipsum.sh
+0 5 * * * /usr/local/bin/ipsum.sh
+EOF
 
 # Install Docker
 # This installation is based on https://docs.docker.com/engine/install/ubuntu/ documentation
