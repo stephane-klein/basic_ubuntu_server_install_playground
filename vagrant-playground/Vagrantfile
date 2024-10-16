@@ -34,13 +34,26 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  config.vm.define "myserver" do |server|
-    server.vm.hostname = "myserver"
+  config.vm.define "server1" do |server|
+    server.vm.hostname = "server1"
     server.vm.box = "bento/ubuntu-24.04" # 24.04 LTS
     server.vm.network "private_network", type: "dhcp"
     server.vm.synced_folder '.', '/vagrant/', disabled: false
 
-    server.hostmanager.aliases = ["myserver.example.com"]
+    server.hostmanager.aliases = ["server1.example.com"]
+    server.vm.provider :virtualbox do |vb|
+      vb.memory = '2096'
+      vb.cpus = '1'
+    end
+  end
+
+  config.vm.define "server2" do |server|
+    server.vm.hostname = "server2"
+    server.vm.box = "bento/ubuntu-24.04" # 24.04 LTS
+    server.vm.network "private_network", type: "dhcp"
+    server.vm.synced_folder '.', '/vagrant/', disabled: false
+
+    server.hostmanager.aliases = ["grafana.example.com"]
     server.vm.provider :virtualbox do |vb|
       vb.memory = '2096'
       vb.cpus = '1'
