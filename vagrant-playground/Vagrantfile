@@ -1,62 +1,42 @@
-$logger = Log4r::Logger.new('vagrantfile')
-def read_ip_address(machine)
-  command = "ip -o addr show dev enp0s8 | grep 'inet ' | cut -d: -f2 | awk '{ print $3 }' | cut -f1 -d\"/\""
-  result  = ""
-
-  $logger.info "Processing #{ machine.name } ... "
-
-  begin
-    # sudo is needed for ifconfig
-    machine.communicate.sudo(command) do |type, data|
-      result << data if type == :stdout
-    end
-    $logger.info "Processing #{ machine.name } ... success"
-  rescue
-    result = "# NOT-UP"
-    $logger.info "Processing #{ machine.name } ... not running"
-  end
-
-  # the second inet is more accurate
-  result.chomp.split("\n").select { |hash| hash != "" }[0]
-end
-
 Vagrant.configure("2") do |config|
   config.vm.provider "virtualbox"
-  config.hostmanager.enabled = true
-  config.hostmanager.manage_host = true
-  config.hostmanager.manage_guest = true
-  config.hostmanager.ignore_private_ip = false
-  config.hostmanager.include_offline = false
 
-  if Vagrant.has_plugin?("HostManager")
-    config.hostmanager.ip_resolver = proc do |vm, resolving_vm|
-      read_ip_address(vm)
+  # Configure read ip, more info see https://github.com/BerlinVagrant/vagrant-dns/blob/e074ada87dedb6e14e9db7f9b92cf4e72cba16ac/README.md?plain=1#L207
+  config.dns.ip = -> (vm, opts) do
+    ip = nil
+    vm.communicate.execute("hostname -I | cut -d ' ' -f 2") do |type, data|
+      ip = data.strip if type == :stdout
     end
+    ip
   end
 
   config.vm.define "server1" do |server|
-    server.vm.hostname = "server1"
     server.vm.box = "bento/ubuntu-24.04" # 24.04 LTS
+    server.vm.hostname = "server1"
+    server.dns.tld = "test"
+    server.dns.patterns = ["server1.vagrant.test"]
     server.vm.network "private_network", type: "dhcp"
     server.vm.synced_folder '.', '/vagrant/', disabled: false
 
-    server.hostmanager.aliases = ["server1.example.com"]
     server.vm.provider :virtualbox do |vb|
       vb.memory = '2096'
       vb.cpus = '1'
+      vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
     end
   end
 
   config.vm.define "server2" do |server|
-    server.vm.hostname = "server2"
     server.vm.box = "bento/ubuntu-24.04" # 24.04 LTS
+    server.vm.hostname = "server2"
+    server.dns.tld = "test"
+    server.dns.patterns = ["server2.vagrant.test", "grafana.vagrant.test", "loki.vagrant.test"]
     server.vm.network "private_network", type: "dhcp"
     server.vm.synced_folder '.', '/vagrant/', disabled: false
 
-    server.hostmanager.aliases = ["grafana.example.com"]
     server.vm.provider :virtualbox do |vb|
       vb.memory = '2096'
       vb.cpus = '1'
+      vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
     end
   end
 end
