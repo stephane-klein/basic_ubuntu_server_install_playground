@@ -39,6 +39,15 @@ $ vagrant dns -l
 /loki.vagrant.test/ => 192.168.56.23
 ```
 
+```sh
+$ resolvectl query server2.vagrant.test
+server2.vagrant.test: 192.168.56.23
+
+-- Information acquired via protocol DNS in 4.2ms.
+-- Data is authenticated: no; Data was acquired via local or encrypted transport: no
+-- Data from: network
+```
+
 First, we need to deploy server2, which monitors and aggregates logs (Loki, Grafana, Prometheus).
 
 ```sh
@@ -48,14 +57,6 @@ $ ./server2/scripts/deploy.sh
 
 Check hostname resolution:
 
-```
-$ resolvectl query server2.vagrant.test
-server2.vagrant.test: 192.168.56.23
-
--- Information acquired via protocol DNS in 4.2ms.
--- Data is authenticated: no; Data was acquired via local or encrypted transport: no
--- Data from: network
-```
 
 ```sh
 $ ./scripts/install_basic_server_configuration.sh
