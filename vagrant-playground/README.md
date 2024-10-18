@@ -29,6 +29,16 @@ $ vagrant dns --install
 $ vagrant dns --start
 ```
 
+Check DNS configuration:
+
+```sh
+$ vagrant dns -l
+/server1.vagrant.test/ => 192.168.56.22
+/server2.vagrant.test/ => 192.168.56.23
+/grafana.vagrant.test/ => 192.168.56.23
+/loki.vagrant.test/ => 192.168.56.23
+```
+
 Check hostname resolution:
 
 ```
