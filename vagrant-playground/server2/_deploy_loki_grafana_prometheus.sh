@@ -16,7 +16,6 @@ server:
 
 ingester:
   lifecycler:
-    address: 127.0.0.1
     ring:
       kvstore:
         store: inmemory
@@ -59,9 +58,6 @@ ruler:
     local:
       directory: /loki/rules
   rule_path: /loki/rules
-  ring:
-    kvstore:
-      store: inmemory
   enable_api: true
 
 EOF
@@ -93,6 +89,7 @@ EOF
 
 cd ${PROJECT_FOLDER}
 docker compose pull
+docker compose down
 docker compose up -d
 
 # Generate Grafana API Token

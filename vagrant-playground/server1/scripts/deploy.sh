@@ -4,4 +4,4 @@ set -e
 cd "$(dirname "$0")/../"
 
 scripts/config-ssh.sh > /dev/null 2>&1
-ssh vagrant@server1.example.com 'sudo bash -s' < ../_deploy_monitoring_and_logging.sh
+ssh vagrant@server1.vagrant.test 'sudo bash -s' < ../_deploy_monitoring_and_logging.sh

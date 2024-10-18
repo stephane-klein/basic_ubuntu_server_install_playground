@@ -14,7 +14,7 @@ positions:
   filename: /var/lib/promtail/positions.yaml
 
 clients:
-  - url: http://grafana.example.com:3100/loki/api/v1/push
+  - url: http://grafana.vagrant.test:3100/loki/api/v1/push
 
 scrape_configs:
   - job_name: system
