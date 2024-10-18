@@ -27,7 +27,7 @@ $ vagrant box update # (optional)
 $ vagrant up
 $ vagrant dns --install
 $ vagrant dns --start
-```
+``` 
 
 Check DNS configuration:
 
@@ -41,7 +41,7 @@ $ vagrant dns -l
 
 Check hostname resolution:
 
-```
+```sh
 $ resolvectl query server2.vagrant.test
 server2.vagrant.test: 192.168.56.23
 
@@ -50,9 +50,20 @@ server2.vagrant.test: 192.168.56.23
 -- Data from: network
 ```
 
+First, we need to deploy server2, which monitors and aggregates logs (Loki, Grafana, Prometheus).
+
 ```sh
-$ ./scripts/install_basic_server_configuration.sh
+$ ./server2/scripts/install_basic_server_configuration.sh
+$ ./server2/scripts/deploy.sh
 ```
+
+
+```sh
+$ ./server1/scripts/install_basic_server_configuration.sh
+$ ./server1/scritps/deploy.sh
+```
+
+Go to http://grafana.vagrant.test:3000 (login: `admin`, password: `password`)
 
 ## Teardown
 

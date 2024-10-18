@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -ev
+set -evuo pipefail
 
 export DEBIAN_FRONTEND=noninteractive
 echo '* libraries/restart-without-asking boolean true' | sudo debconf-set-selections
@@ -12,16 +12,17 @@ apt-get install -yq \
     gnupg \
     ufw \
     ipset \
-    fail2ban
+    fail2ban \
+    jq
 
 # Basic safety element configuration, inspired by article https://kenhv.com/blog/securing-a-linux-server
 
 usermod root --shell /sbin/nologin
 passwd --lock root
 
-cat <<EOF > /etc/ssh/sshd_config.d/99-sklein-security.conf
+cat <<'EOF' > /etc/ssh/sshd_config.d/99-sklein-security.conf
 Protocol 2
-MaxAuthTries 3
+#MaxAuthTries 3
 PermitRootLogin no
 PasswordAuthentication no
 PubkeyAuthentication yes
