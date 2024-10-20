@@ -96,7 +96,7 @@ As a result, the configuration set up by *vagrant-dns* isn't used and `server2.v
 
 Solution found to enable *Grafana Grizzy* to resolve `server2.vagrant.test`: use *vagrant-hostmanager* to configure virtual machine hostnames in `/etc/hosts`.
 
-Why not just use *vagrant-hostmanager*?
+Why not just only use *vagrant-hostmanager*?
 
 *vagrant-hostmanager* sets hostname ip's in `/etc/hosts` for host server and virtual machines.
 
