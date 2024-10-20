@@ -84,9 +84,7 @@ Go to http://grafana.vagrant.test:3000 (login: `admin`, password: `password`)
 $ vagrant destroy -f
 ```
 
- ## Why We Did It This Way?
-
-Why does this project use both [vagrant-dns](https://github.com/BerlinVagrant/vagrant-dns) and [vagrant-hostmanager](https://github.com/devopsgroup-io/vagrant-hostmanager)?
+## Why does this project use both [vagrant-dns](https://github.com/BerlinVagrant/vagrant-dns) and [vagrant-hostmanager](https://github.com/devopsgroup-io/vagrant-hostmanager)?
 
 *vagrant-dns* configures `*.test` hostnames via a [systemd-resolved](https://man.archlinux.org/man/systemd-resolved.service.8.en) configuration file named `/etc/systemd/resolved.conf.d/vagrant-dns.conf`.
 
