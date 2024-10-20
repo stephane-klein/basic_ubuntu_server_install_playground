@@ -1,0 +1,63 @@
+apiVersion: grizzly.grafana.com/v1alpha1
+kind: Dashboard
+metadata:
+    folder: general
+    name: ce19yxmtnfx1cd
+spec:
+    annotations:
+        list:
+            - builtIn: 1
+              datasource:
+                type: grafana
+                uid: -- Grafana --
+              enable: true
+              hide: true
+              iconColor: rgba(0, 211, 255, 1)
+              name: Annotations & Alerts
+              type: dashboard
+    editable: true
+    fiscalYearStartMonth: 0
+    graphTooltip: 0
+    links: []
+    panels:
+        - datasource:
+            type: loki
+            uid: de19y31uykhkwf
+          gridPos:
+            h: 29
+            w: 24
+            x: 0
+            "y": 0
+          id: 1
+          options:
+            dedupStrategy: none
+            enableLogDetails: true
+            prettifyLogMessage: false
+            showCommonLabels: false
+            showLabels: false
+            showTime: true
+            sortOrder: Descending
+            wrapLogMessage: false
+          targets:
+            - datasource:
+                type: loki
+                uid: de19y31uykhkwf
+              editorMode: builder
+              expr: '{service_name="systemd-journal"} |= ``'
+              key: Q-722b545f-4525-4319-ba35-8ea2aaf528b6-0
+              queryType: range
+              refId: A
+          title: journald
+          type: logs
+    schemaVersion: 39
+    tags: []
+    templating:
+        list: []
+    time:
+        from: now-1h
+        to: now
+    timepicker: {}
+    timezone: browser
+    title: Logging
+    uid: ce19yxmtnfx1cd
+    weekStart: ""
