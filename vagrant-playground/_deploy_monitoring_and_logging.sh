@@ -5,8 +5,8 @@ PROJECT_FOLDER="/srv/monitoring_and_logging/"
 
 mkdir -p ${PROJECT_FOLDER}
 
-cp ${PROJECT_FOLDER}promtail-config.yaml ${PROJECT_FOLDER}promtail-config.yaml.bak
-cat <<'EOF' > "${PROJECT_FOLDER}promtail-config.yaml"
+[ -f ${PROJECT_FOLDER}promtail-config.yaml ] && cp ${PROJECT_FOLDER}promtail-config.yaml ${PROJECT_FOLDER}promtail-config.yaml.bak
+cat <<EOF > "${PROJECT_FOLDER}promtail-config.yaml"
 server:
   http_listen_port: 9080
   grpc_listen_port: 0
@@ -45,7 +45,7 @@ scrape_configs:
     pipeline_stages:
       - docker: {}
       - static_labels:
-          host: server1
+          host: $(hostname)
           job: docker
 EOF
 promtail_config_modified=$(if [ "$(md5sum ${PROJECT_FOLDER}/promtail-config.yaml | awk '{ print $1 }')" != "$(md5sum ${PROJECT_FOLDER}/promtail-config.yaml.bak | awk '{ print $1 }')" ]; then echo true; else echo false; fi)
@@ -57,8 +57,7 @@ services:
     image: grafana/promtail:3.2.0
     user: "0:0"
     restart: unless-stopped
-    ports:
-      - 9080:9080
+    network_mode: "host"
     volumes:
       - /var/lib/promtail/:/var/lib/promtail/
       - /var/log/journal:/var/log/journal
@@ -68,7 +67,37 @@ services:
       - ./promtail-config.yaml:/etc/promtail/promtail-config.yaml
     command:
       - "-config.file=/etc/promtail/promtail-config.yaml"
+
+  node_exporter:
+    image: quay.io/prometheus/node-exporter:v1.8.2
+    container_name: node_exporter
+    network_mode: "host"
+    command:
+      - '--path.rootfs=/host'
+    pid: host
+    restart: unless-stopped
+    volumes:
+      - '/:/host:ro,rslave'
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
+    container_name: cadvisor
+    network_mode: "host"
+    restart: unless-stopped
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    privileged: true
+    devices:
+      - "/dev/kmsg:/dev/kmsg"
 EOF
+
+ufw allow 9080 # promtail
+ufw allow 9100 # node exporter
+ufw allow 8080 # cadvisor
 
 cd ${PROJECT_FOLDER}
 docker compose pull

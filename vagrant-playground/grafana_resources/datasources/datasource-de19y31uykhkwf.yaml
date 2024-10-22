@@ -12,4 +12,4 @@ spec:
     type: loki
     typeLogoUrl: public/app/plugins/datasource/loki/img/loki_icon.svg
     uid: de19y31uykhkwf
-    url: http://loki:3100
+    url: http://loki.vagrant.test:3100

@@ -16,6 +16,13 @@ This deployment “skeleton” will have to meet the following specifications:
     - [Promtail](https://grafana.com/docs/loki/latest/send-data/promtail/)
     - [Loki](https://en.wikipedia.org/wiki/Grafana)
     - [Grafana](https://en.wikipedia.org/wiki/Grafana)
+  - Setup hardware and OS metrics with:
+    - [Node exporter](https://github.com/prometheus/node_exporter)
+    - [cAdvisor](https://github.com/google/cadvisor) (for Docker containers)
+    - [Prometheus](https://github.com/prometheus/prometheus)
+    - [Grafana](https://en.wikipedia.org/wiki/Grafana)
+      - [Node Exporter Grafana Dashboards](https://github.com/rfmoz/grafana-dashboards)
+      - [cAdvisor exporter - Docker containers Overview](https://grafana.com/grafana/dashboards/21743-cadvisor-exporter-docker-containers-overview/)
 - Docker installation
 
 More information, see [Projet 14 - Script de base d'installation d'un serveur Ubuntu LTS](https://notes.sklein.xyz/Projet%2014/) (in french).

@@ -68,7 +68,8 @@ $ ./server1/scripts/deploy.sh
 
 You can consult the Grafana dashboard (login: `admin`, password: `password`):
 
-- [Logging](http://grafana.vagrant.test:3000/d/ce19yxmtnfx1cd/logging?orgId=1)
+- [Logging](http://grafana.vagrant.test:3000/d/ce19yxmtnfx1cd/logging)
+- [Node exporter](http://grafana.vagrant.test:3000/d/node-exporter-full/node-exporter-full)
 
 ## Teardown
 
