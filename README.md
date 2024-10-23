@@ -5,6 +5,7 @@ The aim of this repository is to serve as a reference for deploying Ubuntu cloud
 This deployment “skeleton” will have to meet the following specifications:
 
 - Installation via Terraform on Scaleway
+- Creating unix users and their ssh keys 
 - Basic security:
   - Configure OpenSSH
   - Configure UFW

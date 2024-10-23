@@ -66,6 +66,12 @@ $ ./server1/scripts/install_basic_server_configuration.sh
 $ ./server1/scripts/deploy.sh
 ```
 
+Deploy users:
+
+```sh
+$ ./scritps/deploy-users.sh
+```
+
 You can consult the Grafana dashboard (login: `admin`, password: `password`):
 
 - [Logging](http://grafana.vagrant.test:3000/d/ce19yxmtnfx1cd/logging)
