@@ -78,6 +78,7 @@ services:
   grafana:
     image: grafana/grafana:11.2.2
     restart: unless-stopped
+    user: root
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=password
@@ -85,6 +86,8 @@ services:
       - GF_USERS_ALLOW_SIGN_UP=false
     ports:
       - "3000:3000"
+    volumes:
+      - /var/lib/grafana:/var/lib/grafana
 EOF
 
 cd ${PROJECT_FOLDER}
