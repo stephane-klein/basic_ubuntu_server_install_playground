@@ -5,7 +5,7 @@ PROJECT_FOLDER="/srv/loki_prometheus_grafana/"
 
 mkdir -p ${PROJECT_FOLDER}
 
-
+cp ${PROJECT_FOLDER}/loki-config.yaml ${PROJECT_FOLDER}/loki-config.yaml.bak
 cat <<'EOF' > "${PROJECT_FOLDER}/loki-config.yaml"
 auth_enabled: false
 
@@ -59,12 +59,14 @@ ruler:
       directory: /loki/rules
   rule_path: /loki/rules
   enable_api: true
-
 EOF
+
+loki_config_modified=$(if [ "$(md5sum ${PROJECT_FOLDER}/loki-config.yaml | awk '{ print $1 }')" != "$(md5sum ${PROJECT_FOLDER}/loki-config.yaml.bak | awk '{ print $1 }')" ]; then echo true; else echo false; fi)
 
 cat <<'EOF' > "${PROJECT_FOLDER}docker-compose.yaml"
 services:
   loki:
+    container_name: loki
     image: grafana/loki:3.2.0
     restart: unless-stopped
     user: root
@@ -76,6 +78,7 @@ services:
       - /var/lib/loki/:/var/lib/loki/
 
   grafana:
+    container_name: grafana
     image: grafana/grafana:11.2.2
     restart: unless-stopped
     user: root
@@ -92,44 +95,9 @@ EOF
 
 cd ${PROJECT_FOLDER}
 docker compose pull
-docker compose down
+
+if [ "$loki_config_modified" == "true" ]; then
+    docker compose stop loki
+fi
+
 docker compose up -d
-
-# Generate Grafana API Token
-until curl -s http://localhost:3000/api/health | grep "ok"; do
-    echo "Waiting for Grafana to be ready...";
-    sleep 5;
-done;
-
-if [ -f "./grafana_token.json" ]; then
-    echo "Grafana already exists"
-else
-    echo "Grafana is ready, generating API token...";
-    curl -s -X POST http://localhost:3000/api/auth/keys \
-        -H "Content-Type: application/json" \
-        -u admin:password \
-        -d '{"name":"auto-generated-token","role":"Admin"}' > ./grafana_token.json;
-    echo "Token generated:";
-    cat ./grafana_token.json;
-fi
-
-# Add Loki datasource to Grafana
-if [ -f "./loki_source_message.json" ]; then
-    echo "Loki source already exists"
-else
-    echo "Add Loki datasource to Grafana"
-    curl -s -X POST "http://localhost:3000/api/datasources" \
-      -H "Content-Type: application/json" \
-      -H "Authorization: Bearer $(cat grafana_token.json  | jq -r .key)" \
-      -d '{
-        "name": "Loki",
-        "type": "loki",
-        "url": "http://loki:3100",
-        "access": "proxy",
-        "basicAuth": false,
-        "jsonData": {
-          "maxLines": 1000
-        }
-      }' > ./loki_source_message.json
-    echo "Loki datasource to Grafana added"
-fi

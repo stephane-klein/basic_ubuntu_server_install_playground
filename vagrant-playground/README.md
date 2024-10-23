@@ -21,7 +21,7 @@ $ vagrant plugin install vagrant-dns  --plugin-version 2.4.
 $ vagrant plugin install vagrant-hostmanager  --plugin-version 1.8.10
 ```
 
-- Install Mise
+- Install [Mise](https://mise.jdx.dev/)
 - Use Mise to install [Grafana Grizzly](https://github.com/daveneeley/asdf-grafana-grizzly):
 
 ```sh
@@ -34,7 +34,7 @@ If your Workstation OS is Fedora, then you can follow these installation instruc
 
 # Getting started
 
-Launching the virtual server:
+Launching the virtual servers:
 
 ```sh
 $ vagrant box update # (optional)
@@ -42,7 +42,7 @@ $ vagrant up
 $ vagrant dns --start
 ``` 
 
-Check DNS configuration:
+DNS configuration smoke test:
 
 ```sh
 $ vagrant dns -l
@@ -52,36 +52,49 @@ $ vagrant dns -l
 /loki.vagrant.test/ => 192.168.56.23
 ```
 
-Check hostname resolution:
-
-```sh
-$ resolvectl query server2.vagrant.test
-server2.vagrant.test: 192.168.56.23
-
--- Information acquired via protocol DNS in 4.2ms.
--- Data is authenticated: no; Data was acquired via local or encrypted transport: no
--- Data from: network
-```
-
-First, we need to deploy server2, which monitors and aggregates logs (Loki, Grafana, Prometheus).
+First, we need to deploy `server2`, which aggregates metrics and logs from the servers (Loki, Grafana, Prometheus).
 
 ```sh
 $ ./server2/scripts/install_basic_server_configuration.sh
 $ ./server2/scripts/deploy.sh
 ```
 
+Next, we deploy `server1`, which has the function of hosting your application(s):
 
 ```sh
 $ ./server1/scripts/install_basic_server_configuration.sh
-$ ./server1/scritps/deploy.sh
+$ ./server1/scripts/deploy.sh
 ```
 
-Go to http://grafana.vagrant.test:3000 (login: `admin`, password: `password`)
+You can consult the Grafana dashboard (login: `admin`, password: `password`):
+
+- [Logging](http://grafana.vagrant.test:3000/d/ce19yxmtnfx1cd/logging?orgId=1)
 
 ## Teardown
 
 ```sh
 $ vagrant destroy -f
+```
+
+## Helper scritps
+
+As a developer, when I modify Promtail's configuration, I like to purge Loki's data completely so that I can view my
+changes without being visually disturbed by the old data. To accomplish this, I run the following command:
+
+```sh
+$ ./scripts/reset-logging-data.sh
+```
+
+I use the following script to pull the Grafana configuration (datasource, dashboard...) from the [`grafana_resouces/`](grafana_resouces/) folder:
+
+```sh
+$ ./server2/scripts/pull-grafana-resources.sh
+```
+
+Then I can apply this Grafana configuration with the following script:
+
+```sh
+$ ./server2/scripts/apply-grafana-resources.sh
 ```
 
 ## Why does this project use both [vagrant-dns](https://github.com/BerlinVagrant/vagrant-dns) and [vagrant-hostmanager](https://github.com/devopsgroup-io/vagrant-hostmanager)?

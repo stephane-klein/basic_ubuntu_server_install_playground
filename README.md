@@ -12,6 +12,10 @@ This deployment “skeleton” will have to meet the following specifications:
   - Setup fail2ban
   - Setup Linux Audit
   - Setup aptcron
+  - Setup log centralization with:
+    - [Promtail](https://grafana.com/docs/loki/latest/send-data/promtail/)
+    - [Loki](https://en.wikipedia.org/wiki/Grafana)
+    - [Grafana](https://en.wikipedia.org/wiki/Grafana)
 - Docker installation
 
 More information, see [Projet 14 - Script de base d'installation d'un serveur Ubuntu LTS](https://notes.sklein.xyz/Projet%2014/) (in french).
