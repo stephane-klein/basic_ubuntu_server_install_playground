@@ -136,6 +136,34 @@ services:
       - "--storage.tsdb.path=/prometheus"
     environment:
       - VIRTUAL_HOST=prometheus.vagrant.test
+
+  ntfy:
+    image: binwiederhier/ntfy:v2.11.0
+    restart: unless-stopped
+    container_name: ntfy
+    command:
+      - serve
+    environment: # Documentation https://github.com/binwiederhier/ntfy/blob/630f2957deb670dcacfe0a338091d7561f176b9c/docs/config.md?plain=1#L1373
+      NTFY_LISTEN_HTTP: ":9000"
+      VIRTUAL_HOST: ntfy.vagrant.test
+      VIRTUAL_PORT: 9000
+    user: root
+    volumes:
+      - /var/cache/ntfy:/var/cache/ntfy
+    network_mode: "host"
+    healthcheck:
+        test: ["CMD-SHELL", "wget -q --tries=1 http://localhost:80/v1/health -O - | grep -Eo '\"healthy\"\\s*:\\s*true' || exit 1"]
+        interval: 60s
+        timeout: 10s
+        retries: 3
+        start_period: 40s
+
+  grafana-ntfy:
+    image: academo/grafana-ntfy:latest
+    restart: unless-stopped
+    container_name: grafana-ntfy
+    network_mode: "host"
+    command: "-port=9010 -ntfy-url=http://server2.vagrant.test:9000/grafana"
 EOF
 
 cd ${PROJECT_FOLDER}

@@ -25,14 +25,17 @@ ufw allow 443
 cd ${PROJECT_FOLDER}
 
 mkdir -p ./certs/
-openssl req -x509 \
-    -newkey rsa:4096 \
-    -sha256 \
-    -nodes \
-    -days 365 \
-    -subj "/CN=vagrant.test"  \
-    -keyout "./certs/vagrant.test.key" \
-    -out "./certs/vagrant.test.crt"
+
+if [ ! -f "./certs/vagrant.test.key" ]; then
+    openssl req -x509 \
+        -newkey rsa:4096 \
+        -sha256 \
+        -nodes \
+        -days 365 \
+        -subj "/CN=vagrant.test"  \
+        -keyout "./certs/vagrant.test.key" \
+        -out "./certs/vagrant.test.crt"
+fi
 
 docker compose pull
 docker compose up -d --remove-orphans

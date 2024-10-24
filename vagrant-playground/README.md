@@ -81,6 +81,7 @@ Other web user interfaces:
 
 - https://loki.vagrant.test
 - https://prometheus.vagrant.test
+- https://ntfy.vagrant.test
 
 ## Teardown
 

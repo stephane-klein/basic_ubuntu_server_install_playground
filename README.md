@@ -24,6 +24,7 @@ This deployment “skeleton” will have to meet the following specifications:
     - [Grafana](https://en.wikipedia.org/wiki/Grafana)
       - [Node Exporter Grafana Dashboards](https://github.com/rfmoz/grafana-dashboards)
       - [cAdvisor exporter - Docker containers Overview](https://grafana.com/grafana/dashboards/21743-cadvisor-exporter-docker-containers-overview/)
+  - Setup [ntfy](https://ntfy.sh/) and [Grafana Ntify Webhook integration](https://github.com/academo/grafana-alerting-ntfy-webhook-integration) to send Grafana alert notifications to smartphones
 - Docker installation
 
 More information, see [Projet 14 - Script de base d'installation d'un serveur Ubuntu LTS](https://notes.sklein.xyz/Projet%2014/) (in french).

@@ -1,0 +1,7 @@
+apiVersion: grizzly.grafana.com/v1alpha1
+kind: DashboardFolder
+metadata:
+    name: ae1un1b4e6i9sd
+spec:
+    title: alert
+    uid: ae1un1b4e6i9sd

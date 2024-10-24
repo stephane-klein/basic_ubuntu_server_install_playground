@@ -1,9 +1,9 @@
 apiVersion: grizzly.grafana.com/v1alpha1
 kind: AlertRuleGroup
 metadata:
-    name: ee1tuhg1op7uob.5min
+    name: ae1un1b4e6i9sd.1m
 spec:
-    folderUid: ee1tuhg1op7uob
+    folderUid: ae1un1b4e6i9sd
     interval: 60
     rules:
         - annotations:
@@ -22,7 +22,7 @@ spec:
               queryType: range
               refId: A
               relativeTimeRange:
-                from: 86400
+                from: 900
             - datasourceUid: __expr__
               model:
                 conditions:
@@ -44,7 +44,6 @@ spec:
                     type: __expr__
                     uid: __expr__
                 expression: A
-                hide: false
                 intervalMs: 1000
                 maxDataPoints: 43200
                 reducer: sum
@@ -52,15 +51,19 @@ spec:
                 type: reduce
               refId: B
               relativeTimeRange:
-                from: 86400
+                from: 900
           execErrState: Error
-          folderUID: ee1tuhg1op7uob
-          for: 5m0s
+          folderUID: ae1un1b4e6i9sd
+          for: 0s
           id: 1
           noDataState: NoData
+          notification_settings:
+            group_by: null
+            mute_time_intervals: null
+            receiver: ntfy
           orgID: 1
-          ruleGroup: 5min
+          ruleGroup: 1m
           title: Security packages to upgrade
           uid: ce1tuk9726i9sa
-          updated: "2024-10-24T10:25:27.000Z"
-    title: 5min
+          updated: "2024-10-24T16:57:37.000Z"
+    title: 1m

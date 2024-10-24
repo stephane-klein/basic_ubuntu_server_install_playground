@@ -5,4 +5,5 @@ cd "$(dirname "$0")/../../"
 
 source .envrc
 
-grr pull grafana_resources -t Datasource,Dashboard,DashboardFolder,AlertRuleGroup,AlertNotificationPolicy,AlertContactPoint
+rm -rf grafana_resources
+grr pull grafana_resources -t Datasource,Dashboard,DashboardFolder,AlertRuleGroup,AlertNotificationPolicy,AlertContactPoint,AlertNotificationPolicy
