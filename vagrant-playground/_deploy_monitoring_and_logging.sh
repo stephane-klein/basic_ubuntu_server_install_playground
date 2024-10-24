@@ -30,6 +30,8 @@ scrape_configs:
         target_label: 'unit'
       - source_labels: ['__journal_priority']
         target_label: 'priority'
+      - source_labels: ['__journal_syslog_identifier']
+        target_label: 'tag'
 
   # Documentation: https://grafana.com/docs/loki/latest/send-data/promtail/configuration/#docker_sd_configs
   - job_name: "docker"
