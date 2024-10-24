@@ -1,0 +1,7 @@
+apiVersion: grizzly.grafana.com/v1alpha1
+kind: DashboardFolder
+metadata:
+    name: ee1tuhg1op7uob
+spec:
+    title: test
+    uid: ee1tuhg1op7uob

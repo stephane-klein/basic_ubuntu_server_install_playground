@@ -5,6 +5,7 @@ set -evuo pipefail
 export DEBIAN_FRONTEND=noninteractive
 echo '* libraries/restart-without-asking boolean true' | sudo debconf-set-selections
 apt-get update -y
+#apt-get upgrade -y
 apt-get install -yq \
     apt-transport-https \
     ca-certificates \
@@ -109,6 +110,13 @@ port = 22
 EOF
 
 systemctl restart fail2ban
+
+# Send package-to-upgrade list to journald
+cat <<'EOF' > /etc/cron.daily/package-to-upgrade
+#!/bin/sh
+apt list --upgradable 2>/dev/null | grep -i security | /usr/bin/logger -t package-to-upgrade
+EOF
+sudo chmod +x /etc/cron.daily/package-to-upgrade
 
 # Install Docker
 # This installation is based on https://docs.docker.com/engine/install/ubuntu/ documentation

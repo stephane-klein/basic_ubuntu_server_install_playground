@@ -12,7 +12,7 @@ This deployment “skeleton” will have to meet the following specifications:
   - Setup [IPsum](https://github.com/stamparm/ipsum) - Daily feed of bad IPs (with blacklist hit scores)
   - Setup fail2ban
   - Setup Linux Audit
-  - Setup aptcron
+  - Setup a script to send Loki a daily list of security packages to be installed on the server
   - Setup log centralization with:
     - [Promtail](https://grafana.com/docs/loki/latest/send-data/promtail/)
     - [Loki](https://en.wikipedia.org/wiki/Grafana)

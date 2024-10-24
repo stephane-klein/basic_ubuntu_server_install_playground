@@ -1,0 +1,66 @@
+apiVersion: grizzly.grafana.com/v1alpha1
+kind: AlertRuleGroup
+metadata:
+    name: ee1tuhg1op7uob.5min
+spec:
+    folderUid: ee1tuhg1op7uob
+    interval: 60
+    rules:
+        - annotations:
+            __dashboardUid__: ce19yxmtnfx1cd
+            __panelId__: "4"
+          condition: B
+          data:
+            - datasourceUid: de19y31uykhkwf
+              model:
+                editorMode: builder
+                expr: sum(rate({tag="package-to-upgrade"} [$__auto]))
+                intervalMs: 1000
+                maxDataPoints: 43200
+                queryType: range
+                refId: A
+              queryType: range
+              refId: A
+              relativeTimeRange:
+                from: 86400
+            - datasourceUid: __expr__
+              model:
+                conditions:
+                    - evaluator:
+                        params:
+                            - 0
+                            - 0
+                        type: gt
+                      operator:
+                        type: and
+                      query:
+                        params: []
+                      reducer:
+                        params: []
+                        type: avg
+                      type: query
+                datasource:
+                    name: Expression
+                    type: __expr__
+                    uid: __expr__
+                expression: A
+                hide: false
+                intervalMs: 1000
+                maxDataPoints: 43200
+                reducer: sum
+                refId: B
+                type: reduce
+              refId: B
+              relativeTimeRange:
+                from: 86400
+          execErrState: Error
+          folderUID: ee1tuhg1op7uob
+          for: 5m0s
+          id: 1
+          noDataState: NoData
+          orgID: 1
+          ruleGroup: 5min
+          title: Security packages to upgrade
+          uid: ce1tuk9726i9sa
+          updated: "2024-10-24T10:25:27.000Z"
+    title: 5min
