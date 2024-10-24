@@ -108,4 +108,4 @@ if [ "$promtail_config_modified" == "true" ]; then
     docker compose stop promtail
 fi
 
-docker compose up -d
+docker compose up -d --remove-orphans

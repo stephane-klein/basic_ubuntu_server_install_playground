@@ -101,6 +101,8 @@ services:
     user: root
     network_mode: "host"
     command: "-config.file=/etc/loki/local-config.yaml"
+    environment:
+      - VIRTUAL_HOST=loki.vagrant.test
     volumes:
       - ./loki-config.yaml:/etc/loki/local-config.yaml
       - /var/lib/loki/:/var/lib/loki/
@@ -111,6 +113,7 @@ services:
     restart: unless-stopped
     user: root
     environment:
+      - VIRTUAL_HOST=grafana.vagrant.test
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=password
       - GF_USERS_DEFAULT_THEME=light
@@ -131,11 +134,9 @@ services:
     command:
       - "--config.file=/etc/prometheus/prometheus.yaml"
       - "--storage.tsdb.path=/prometheus"
+    environment:
+      - VIRTUAL_HOST=prometheus.vagrant.test
 EOF
-
-ufw allow 3100 # Loki
-ufw allow 3000 # Grafana
-ufw allow 9090 # Prometheus
 
 cd ${PROJECT_FOLDER}
 docker compose pull
@@ -148,4 +149,4 @@ if [ "$prometheus_config_modified" == "true" ]; then
     docker compose stop prometheus
 fi
 
-docker compose up -d
+docker compose up -d --remove-orphans

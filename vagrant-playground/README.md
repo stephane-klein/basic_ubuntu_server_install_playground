@@ -74,8 +74,13 @@ $ ./scritps/deploy-users.sh
 
 You can consult the Grafana dashboard (login: `admin`, password: `password`):
 
-- [Logging](http://grafana.vagrant.test:3000/d/ce19yxmtnfx1cd/logging)
-- [Node exporter](http://grafana.vagrant.test:3000/d/node-exporter-full/node-exporter-full)
+- [Logging](https://grafana.vagrant.test/d/ce19yxmtnfx1cd/logging)
+- [Node exporter](https://grafana.vagrant.test/d/node-exporter-full/node-exporter-full)
+
+Other web user interfaces:
+
+- https://loki.vagrant.test
+- https://prometheus.vagrant.test
 
 ## Teardown
 
