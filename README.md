@@ -4,14 +4,14 @@ The aim of this repository is to serve as a reference for deploying Ubuntu cloud
 
 This deployment “skeleton” will have to meet the following specifications:
 
-- Installation via Terraform on Scaleway
+- Installation via Terraform on Scaleway (not implemented yet)
 - Creating unix users and their ssh keys 
 - Basic security:
-  - Configure OpenSSH
-  - Configure UFW
+  - Configure OpenSSH [hardening](https://kenhv.com/blog/securing-a-linux-server)
+  - Setup [fail2ban](https://en.wikipedia.org/wiki/Fail2ban)
   - Setup [IPsum](https://github.com/stamparm/ipsum) - Daily feed of bad IPs (with blacklist hit scores)
-  - Setup fail2ban
-  - Setup Linux Audit
+  - Configure [UFW](https://en.wikipedia.org/wiki/Uncomplicated_Firewall) (Uncomplicated Firewall)
+  - Setup [Linux Audit](https://github.com/linux-audit/audit-userspace) (not implemented yet)
   - Setup a script to send Loki a daily list of security packages to be installed on the server
   - Setup log centralization with:
     - [Promtail](https://grafana.com/docs/loki/latest/send-data/promtail/)
